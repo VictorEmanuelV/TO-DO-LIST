@@ -48,5 +48,12 @@ public class UsuarioService implements IUsuario{
     public List<Usuario> findAll() {
        return usuarioRepository.findAll();
     }
+
+    @Override
+    public Usuario findByEmail(String email){
+      return usuarioRepository.findByEmail(email).orElseThrow(
+        ()-> new RuntimeException("usuario nao encontrado por email"+email)
+      );
+    }
     
 }

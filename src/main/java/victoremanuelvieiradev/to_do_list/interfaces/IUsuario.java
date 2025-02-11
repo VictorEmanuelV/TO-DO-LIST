@@ -8,4 +8,5 @@ public interface IUsuario {
     public Usuario findUser(Long id);
     public Usuario updateUser(Usuario usuario, String email);
     public List<Usuario> findAll();
+    public Usuario findByEmail(String email);
 }   
