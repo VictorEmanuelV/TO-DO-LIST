@@ -19,10 +19,10 @@ public class AuthenticationController {
     private final AuthenticationManager manager;
     
     @PostMapping
-    public ResponseEntity<String> auth(@RequestBody AuthDTO dto){
+    public String auth(@RequestBody AuthDTO dto){
        authenticationService.authenticate(dto,manager);
        String token = authenticationService.generateToken(dto);
-       return ResponseEntity.ok().body(token);
+       return token;
 
     }
 }

@@ -2,6 +2,7 @@ package victoremanuelvieiradev.to_do_list.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,12 +10,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @EnableWebMvc
 @Configuration
 public class SpringConfiguration {
 
+    private final SpringFilter filter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception{
@@ -22,8 +28,16 @@ public class SpringConfiguration {
                   .csrf(csrf-> csrf.disable())
                   .formLogin(formLogin-> formLogin.disable())
                   .httpBasic(httpBasic->httpBasic.disable())
-                  .authorizeHttpRequests(auth->auth.anyRequest().permitAll()
-                  ).sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                  .authorizeHttpRequests(auth->auth
+                        .requestMatchers(HttpMethod.POST,"/auth").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/usuario").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/usuario/{id}").hasRole("COMUM")
+                        .requestMatchers(HttpMethod.GET,"/usuario/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/usuario").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/usuario/{email}").hasRole("COMUM")
+                        .anyRequest().authenticated())
+                  .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                  .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                   .build();
 
     }

@@ -2,9 +2,9 @@ package victoremanuelvieiradev.to_do_list.config;
 
 import java.io.IOException;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
@@ -13,13 +13,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import victoremanuelvieiradev.to_do_list.interfaces.IJwtService;
-import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
+import victoremanuelvieiradev.to_do_list.repository.UsuarioRepository;
 
-
+@Configuration
 @AllArgsConstructor
 public class SpringFilter extends OncePerRequestFilter{
     private final IJwtService jwtService;
-    private final IUsuario iusuario;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -30,9 +30,9 @@ public class SpringFilter extends OncePerRequestFilter{
             if(token != null){
                 String email = jwtService.validToken(token);
 
-                var usuario = iusuario.findByEmail(email);
+                var usuario = usuarioRepository.findByEmail(email);
 
-                var auth = UsernamePasswordAuthenticationToken.authenticated(usuario,null,usuario.getAuthorities());
+                var auth = UsernamePasswordAuthenticationToken.authenticated(usuario,null,usuario.get().getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
@@ -48,7 +48,7 @@ public class SpringFilter extends OncePerRequestFilter{
             return null;
         }
 
-        if(!header.split("")[0].equals("Bearer")){
+        if(!header.split(" ")[0].equals("Bearer")){
             return null;
         }
 
