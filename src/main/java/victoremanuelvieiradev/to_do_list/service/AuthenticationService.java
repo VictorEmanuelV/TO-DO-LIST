@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import victoremanuelvieiradev.to_do_list.interfaces.IAuthenticationService;
@@ -11,6 +12,7 @@ import victoremanuelvieiradev.to_do_list.interfaces.IJwtService;
 import victoremanuelvieiradev.to_do_list.repository.UsuarioRepository;
 import victoremanuelvieiradev.to_do_list.web.dto.AuthDTO;
 
+@Service
 @AllArgsConstructor
 public class AuthenticationService implements IAuthenticationService{
     private final UsuarioRepository repository;
@@ -32,7 +34,7 @@ public class AuthenticationService implements IAuthenticationService{
     }
 
     @Override
-    public void authenticateToken(AuthDTO dto, AuthenticationManager manager) {
+    public void authenticate(AuthDTO dto, AuthenticationManager manager) {
        var auth = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha());
        manager.authenticate(auth);
     }
