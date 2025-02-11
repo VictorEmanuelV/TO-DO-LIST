@@ -16,7 +16,7 @@ import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/usuarios")
 public class UsuarioController {
     private final IUsuario iUsuario;
 

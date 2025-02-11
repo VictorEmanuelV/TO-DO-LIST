@@ -1,6 +1,5 @@
 package victoremanuelvieiradev.to_do_list.web.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

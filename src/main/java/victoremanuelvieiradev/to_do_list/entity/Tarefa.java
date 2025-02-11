@@ -33,7 +33,7 @@ public class Tarefa {
     @Column(name = "titulo")
     private String titulo;
     @Column(name = "descricao")
-    private String descriçao;
+    private String descricao;
     @Column(name = "dataCriacao")
     private LocalDateTime dataCriacao;
     @Enumerated(jakarta.persistence.EnumType.STRING)

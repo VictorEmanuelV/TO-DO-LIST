@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import victoremanuelvieiradev.to_do_list.entity.Usuario;
 import victoremanuelvieiradev.to_do_list.interfaces.IAuthenticationService;
 import victoremanuelvieiradev.to_do_list.interfaces.IJwtService;
 import victoremanuelvieiradev.to_do_list.repository.UsuarioRepository;
@@ -23,6 +24,8 @@ public class AuthenticationService implements IAuthenticationService{
        return repository.findByEmail(email).orElseThrow(
            () -> new RuntimeException("error")
        );
+
+    
     }
 
     @Override
