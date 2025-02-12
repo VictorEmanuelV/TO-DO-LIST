@@ -1,6 +1,7 @@
 package victoremanuelvieiradev.to_do_list.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import victoremanuelvieiradev.to_do_list.entity.Usuario;
 import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
+import victoremanuelvieiradev.to_do_list.mapper.UsuarioMapper;
 import victoremanuelvieiradev.to_do_list.repository.UsuarioRepository;
+import victoremanuelvieiradev.to_do_list.web.dto.UsuarioDTO;
 
 @AllArgsConstructor
 @Service
@@ -17,9 +20,13 @@ public class UsuarioService implements IUsuario{
     private final UsuarioRepository usuarioRepository;
 
     @Override
-    public Usuario save(Usuario usuario) {
+    public UsuarioDTO save(UsuarioDTO dto) {
+        
+        var usuario = UsuarioMapper.toUsuario(dto);
         usuario.setSenha(encode.encode(usuario.getSenha()));
-        return usuarioRepository.save(usuario);
+        var response = usuarioRepository.save(usuario);
+
+        return UsuarioMapper.toUsuarioDTO(response);
     }
 
     @Override
@@ -28,25 +35,29 @@ public class UsuarioService implements IUsuario{
     }
 
     @Override
-    public Usuario findUser(Long id) {
-       return usuarioRepository.findById(id).get();
+    public UsuarioDTO findUser(Long id) {
+       return UsuarioMapper.toUsuarioDTO(usuarioRepository.findById(id).get());
     }
 
     @Override
-    public Usuario updateUser(Usuario usuario, String email) {
-       var user = usuarioRepository.findByEmail(email);
+    public UsuarioDTO updateUser(UsuarioDTO dto, String email) {
+       
+        var user = findByEmail(email);
 
-       if(user.isPresent()){
-         user.get().setEmail(usuario.getEmail());
-         user.get().setNome(usuario.getNome());
-         user.get().setSenha(usuario.getSenha());
-       }
-      return usuarioRepository.save(user.get());
+         user.setEmail(dto.getEmail());
+         user.setNome(dto.getNome());
+         user.setSenha(encode.encode(dto.getSenha()));
+   
+         var response = usuarioRepository.save(user);
+         return UsuarioMapper.toUsuarioDTO(response);
     }
 
     @Override
-    public List<Usuario> findAll() {
-       return usuarioRepository.findAll();
+    public List<UsuarioDTO> findAll() {
+       return usuarioRepository
+            .findAll()
+            .stream()
+            .map(x -> UsuarioMapper.toUsuarioDTO(x)).collect(Collectors.toList());
     }
 
     @Override

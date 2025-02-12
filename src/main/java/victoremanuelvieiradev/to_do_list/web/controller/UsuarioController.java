@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
-import victoremanuelvieiradev.to_do_list.entity.Usuario;
 import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
+import victoremanuelvieiradev.to_do_list.web.dto.UsuarioDTO;
 
 @AllArgsConstructor
 @RestController
@@ -22,8 +22,8 @@ public class UsuarioController {
 
 
     @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario){
-        return ResponseEntity.status(201).body(iUsuario.save(usuario));
+    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO dto){
+        return ResponseEntity.status(201).body(iUsuario.save(dto));
     }
 
     @DeleteMapping("/{id}")
@@ -32,15 +32,15 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> findUser(@PathVariable Long id){
+    public ResponseEntity<UsuarioDTO> findUser(@PathVariable Long id){
         return ResponseEntity.ok().body(iUsuario.findUser(id));
     }
     @PutMapping("/{email}")
-    public ResponseEntity<Usuario> updateUser(@RequestBody Usuario usuario,@PathVariable String email){
-        return ResponseEntity.ok().body(iUsuario.updateUser(usuario,email));
+    public ResponseEntity<UsuarioDTO> updateUser(@RequestBody UsuarioDTO dto,@PathVariable String email){
+        return ResponseEntity.ok().body(iUsuario.updateUser(dto,email));
     }
     @GetMapping
-    public ResponseEntity<List<Usuario>> findAll(){
+    public ResponseEntity<List<UsuarioDTO>> findAll(){
         return ResponseEntity.ok().body(iUsuario.findAll());
     }
 }
