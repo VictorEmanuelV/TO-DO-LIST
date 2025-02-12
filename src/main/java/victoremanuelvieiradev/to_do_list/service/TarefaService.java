@@ -8,14 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import victoremanuelvieiradev.to_do_list.entity.Tarefa;
 
 import victoremanuelvieiradev.to_do_list.interfaces.ITarefa;
 import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
 import victoremanuelvieiradev.to_do_list.repository.TarefaRepository;
 
-@Slf4j
 @AllArgsConstructor
 @Service
 public class TarefaService implements ITarefa{
