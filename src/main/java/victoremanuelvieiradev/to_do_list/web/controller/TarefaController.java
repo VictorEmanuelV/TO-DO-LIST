@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
-import victoremanuelvieiradev.to_do_list.entity.Tarefa;
 import victoremanuelvieiradev.to_do_list.interfaces.ITarefa;
+import victoremanuelvieiradev.to_do_list.web.dto.TarefaDTO;
 
 @RequestMapping("/tarefas")
 @AllArgsConstructor
@@ -23,12 +23,12 @@ public class TarefaController {
     private final ITarefa iTarefa;
 
     @PostMapping
-    public ResponseEntity<Tarefa> create(@RequestBody Tarefa tarefa){
-        return ResponseEntity.status(201).body(iTarefa.save(tarefa));
+    public ResponseEntity<TarefaDTO> create(@RequestBody TarefaDTO dto){
+        return ResponseEntity.status(201).body(iTarefa.save(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tarefa> findTarefa(@PathVariable Long id){
+    public ResponseEntity<TarefaDTO> findTarefa(@PathVariable Long id){
         return ResponseEntity.ok().body(iTarefa.findTarefa(id));
     }
 
@@ -39,12 +39,12 @@ public class TarefaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Tarefa>> findAll(){
+    public ResponseEntity<List<TarefaDTO>> findAll(){
         return ResponseEntity.ok().body(iTarefa.findAll());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarefa> updateTarefa(@RequestBody Tarefa tarefa,@PathVariable Long id){
-        return ResponseEntity.ok().body(iTarefa.updateTarefa(id, tarefa));
+    public ResponseEntity<TarefaDTO> updateTarefa(@RequestBody TarefaDTO dto,@PathVariable Long id){
+        return ResponseEntity.ok().body(iTarefa.updateTarefa(id, dto));
     }
 }

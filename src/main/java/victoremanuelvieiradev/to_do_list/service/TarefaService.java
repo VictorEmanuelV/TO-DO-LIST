@@ -2,6 +2,7 @@ package victoremanuelvieiradev.to_do_list.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,10 @@ import victoremanuelvieiradev.to_do_list.entity.Tarefa;
 
 import victoremanuelvieiradev.to_do_list.interfaces.ITarefa;
 import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
+import victoremanuelvieiradev.to_do_list.mapper.TarefaMapper;
+import victoremanuelvieiradev.to_do_list.mapper.UsuarioMapper;
 import victoremanuelvieiradev.to_do_list.repository.TarefaRepository;
+import victoremanuelvieiradev.to_do_list.web.dto.TarefaDTO;
 
 @AllArgsConstructor
 @Service
@@ -21,25 +25,32 @@ public class TarefaService implements ITarefa{
     private final IUsuario iUsuario;
     
     @Override
-    public Tarefa save(Tarefa tarefa) {
+    public TarefaDTO save(TarefaDTO dto) {
         LocalDateTime now = LocalDateTime.now();
         var userDetails = contextHolder();
 
-       var usuario = iUsuario.findByEmail(userDetails.getUsername());
-       tarefa.setUsuario(usuario);
-       tarefa.setDataCriacao(now);
-       return repository.save(tarefa);
+        var usuario = iUsuario.findByEmail(userDetails.getUsername());
+
+        var tarefa = TarefaMapper.toTarefa(dto);
+        tarefa.setUsuario(usuario);
+        tarefa.setDataCriacao(now);
+        
+        var response =  repository.save(tarefa);
+
+        return TarefaMapper.toTarefaDTO(response);
     }
 
     @Override
-    public Tarefa findTarefa(Long id) {
+    public TarefaDTO findTarefa(Long id) {
         var userDetails = contextHolder();
 
         var usuario = iUsuario.findByEmail(userDetails.getUsername());
-       return repository.findByIdAndUsuario(id,usuario).orElseThrow(
+
+        var response = repository.findByIdAndUsuario(id,usuario).orElseThrow(
         () -> new RuntimeException("Tarefa não encontrada")
-       );
-      
+        );
+        
+        return TarefaMapper.toTarefaDTO(response);
     }
 
     @Override
@@ -56,17 +67,19 @@ public class TarefaService implements ITarefa{
     }
 
     @Override
-    public List<Tarefa> findAll() {
+    public List<TarefaDTO> findAll() {
         var userDetails = contextHolder();
 
         var usuario = iUsuario.findByEmail(userDetails.getUsername());
-        return repository.findByUsuario(usuario);
+
+        List<Tarefa> tarefas = repository.findByUsuario(usuario);
+
+        return tarefas.stream().map(x -> TarefaMapper.toTarefaDTO(x)).collect(Collectors.toList());
     }
 
     @Override
-    public Tarefa updateTarefa(Long id,Tarefa tarefa) {
+    public TarefaDTO updateTarefa(Long id,TarefaDTO dto) {
         var userDetails = contextHolder();        
-
 
         var usuario = iUsuario.findByEmail(userDetails.getUsername());
 
@@ -74,11 +87,13 @@ public class TarefaService implements ITarefa{
             () -> new RuntimeException("Tarefa não encontrada")
         );
         
-        taref.setTitulo(tarefa.getTitulo());
-        taref.setStatus(tarefa.getStatus());
-        taref.setDescricao(tarefa.getDescricao());
+        taref.setTitulo(dto.getTitulo());
+        taref.setStatus(dto.getStatus());
+        taref.setDescricao(dto.getDescricao());
 
-        return repository.save(taref);
+        var response = repository.save(taref);
+
+        return TarefaMapper.toTarefaDTO(response);
     }
     
     private UserDetails contextHolder(){
