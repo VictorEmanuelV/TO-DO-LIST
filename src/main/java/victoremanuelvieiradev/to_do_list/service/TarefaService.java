@@ -14,7 +14,6 @@ import victoremanuelvieiradev.to_do_list.entity.Tarefa;
 import victoremanuelvieiradev.to_do_list.interfaces.ITarefa;
 import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
 import victoremanuelvieiradev.to_do_list.mapper.TarefaMapper;
-import victoremanuelvieiradev.to_do_list.mapper.UsuarioMapper;
 import victoremanuelvieiradev.to_do_list.repository.TarefaRepository;
 import victoremanuelvieiradev.to_do_list.web.dto.TarefaDTO;
 

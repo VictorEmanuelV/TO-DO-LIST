@@ -19,7 +19,7 @@ public class TarefaMapper {
         dto.setDescricao(tarefa.getDescricao());
         dto.setId(tarefa.getId());
         dto.setStatus(tarefa.getStatus());
-        dto.setDataCriacao(dto.getDataCriacao());
+        dto.setDataCriacao(tarefa.getDataCriacao());
         dto.setTitulo(tarefa.getTitulo());
 
         return dto;
