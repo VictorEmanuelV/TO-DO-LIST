@@ -13,4 +13,5 @@ import victoremanuelvieiradev.to_do_list.entity.Usuario;
 public interface TarefaRepository extends JpaRepository<Tarefa,Long>{
     Optional<Tarefa> findByIdAndUsuario(Long id,Usuario usuario);
     List<Tarefa> findByUsuario(Usuario usuario);
+    Optional<Tarefa> existsByUsuarioId(Long id);
 }

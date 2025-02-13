@@ -13,6 +13,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 
 import victoremanuelvieiradev.to_do_list.entity.Usuario;
 import victoremanuelvieiradev.to_do_list.interfaces.IJwtService;
+import victoremanuelvieiradev.to_do_list.web.exception.JwtCreationException;
+import victoremanuelvieiradev.to_do_list.web.exception.JwtVerificationException;
 
 @Service
 public class JwtService implements IJwtService{
@@ -25,7 +27,7 @@ public class JwtService implements IJwtService{
                     .withExpiresAt(dateExpire())
                     .sign(algorithm());
         }catch (JWTCreationException ex){
-            throw new RuntimeException(ex.getMessage());
+            throw new JwtCreationException(ex.getMessage());
         }
 
     }
@@ -39,7 +41,7 @@ public class JwtService implements IJwtService{
                     .verify(token)
                     .getSubject();
         }catch (JWTVerificationException ex){
-            throw new RuntimeException(ex.getMessage());
+            throw new JwtVerificationException(ex.getMessage());
         }
     }
     private Algorithm algorithm(){

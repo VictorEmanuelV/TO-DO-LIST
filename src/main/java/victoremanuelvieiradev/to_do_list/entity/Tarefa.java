@@ -1,6 +1,9 @@
 package victoremanuelvieiradev.to_do_list.entity;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -42,6 +45,7 @@ public class Tarefa {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuario;
 
 }

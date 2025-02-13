@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
 import victoremanuelvieiradev.to_do_list.web.dto.UsuarioDTO;
@@ -22,7 +24,7 @@ public class UsuarioController {
 
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO dto){
+    public ResponseEntity<UsuarioDTO> create(@Valid @RequestBody UsuarioDTO dto){
         return ResponseEntity.status(201).body(iUsuario.save(dto));
     }
 
@@ -35,9 +37,9 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> findUser(@PathVariable Long id){
         return ResponseEntity.ok().body(iUsuario.findUser(id));
     }
-    @PutMapping("/{email}")
-    public ResponseEntity<UsuarioDTO> updateUser(@RequestBody UsuarioDTO dto,@PathVariable String email){
-        return ResponseEntity.ok().body(iUsuario.updateUser(dto,email));
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> updateUser(@Valid @RequestBody UsuarioDTO dto,@PathVariable Long id){
+        return ResponseEntity.ok().body(iUsuario.updateUser(dto,id));
     }
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> findAll(){

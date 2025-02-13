@@ -12,16 +12,25 @@ import victoremanuelvieiradev.to_do_list.interfaces.IUsuario;
 import victoremanuelvieiradev.to_do_list.mapper.UsuarioMapper;
 import victoremanuelvieiradev.to_do_list.repository.UsuarioRepository;
 import victoremanuelvieiradev.to_do_list.web.dto.UsuarioDTO;
+import victoremanuelvieiradev.to_do_list.web.exception.EmailAlreadyExistException;
+import victoremanuelvieiradev.to_do_list.web.exception.UserNotFoundException;
 
 @AllArgsConstructor
 @Service
 public class UsuarioService implements IUsuario{
     private final PasswordEncoder encode;
     private final UsuarioRepository usuarioRepository;
+  
 
     @Override
     public UsuarioDTO save(UsuarioDTO dto) {
         
+        var usuarioExist = usuarioRepository.findByEmail(dto.getEmail());
+
+        if(usuarioExist.isPresent()){
+           throw new EmailAlreadyExistException("Email Already Exist");
+        }
+
         var usuario = UsuarioMapper.toUsuario(dto);
         usuario.setSenha(encode.encode(usuario.getSenha()));
         var response = usuarioRepository.save(usuario);
@@ -31,25 +40,44 @@ public class UsuarioService implements IUsuario{
 
     @Override
     public void delete(Long id) {
+      var usuarioExist = usuarioRepository.findById(id);
+
+      if(!usuarioExist.isPresent()){
+        throw new UserNotFoundException("User not found: "+id);
+      }
+     
       usuarioRepository.deleteById(id);
     }
 
     @Override
     public UsuarioDTO findUser(Long id) {
-       return UsuarioMapper.toUsuarioDTO(usuarioRepository.findById(id).get());
+       return UsuarioMapper.toUsuarioDTO(usuarioRepository.findById(id).orElseThrow(
+          ()-> new UserNotFoundException("User not found: "+id))
+       );
+
     }
 
     @Override
-    public UsuarioDTO updateUser(UsuarioDTO dto, String email) {
+    public UsuarioDTO updateUser(UsuarioDTO dto, Long id) {
+        var usuario = usuarioRepository.findById(id).orElseThrow(
+          ()-> new UserNotFoundException("User not found")
+        );        
        
-        var user = findByEmail(email);
+        var user = usuarioRepository.findByEmail(dto.getEmail());
+        
+        if(user.isPresent()){
+           if(!user.get().getId().equals(id)){
+            throw new EmailAlreadyExistException("Email Already Exist");
+           }
+        }
+        
+        usuario.setEmail(dto.getEmail());
+        usuario.setNome(dto.getNome());
+        usuario.setSenha(encode.encode(dto.getSenha()));
+        
+        var response = usuarioRepository.save(usuario);
 
-         user.setEmail(dto.getEmail());
-         user.setNome(dto.getNome());
-         user.setSenha(encode.encode(dto.getSenha()));
-   
-         var response = usuarioRepository.save(user);
-         return UsuarioMapper.toUsuarioDTO(response);
+        return UsuarioMapper.toUsuarioDTO(response);
     }
 
     @Override
@@ -63,7 +91,7 @@ public class UsuarioService implements IUsuario{
     @Override
     public Usuario findByEmail(String email){
       return usuarioRepository.findByEmail(email).orElseThrow(
-        ()-> new RuntimeException("usuario nao encontrado por email"+email)
+        ()-> new UserNotFoundException("User not found: "+email)
       );
     }
     

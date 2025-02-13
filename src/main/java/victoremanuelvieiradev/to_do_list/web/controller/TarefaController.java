@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import victoremanuelvieiradev.to_do_list.interfaces.ITarefa;
 import victoremanuelvieiradev.to_do_list.web.dto.TarefaDTO;
@@ -23,7 +24,7 @@ public class TarefaController {
     private final ITarefa iTarefa;
 
     @PostMapping
-    public ResponseEntity<TarefaDTO> create(@RequestBody TarefaDTO dto){
+    public ResponseEntity<TarefaDTO> create(@Valid @RequestBody TarefaDTO dto){
         return ResponseEntity.status(201).body(iTarefa.save(dto));
     }
 
@@ -44,7 +45,7 @@ public class TarefaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TarefaDTO> updateTarefa(@RequestBody TarefaDTO dto,@PathVariable Long id){
+    public ResponseEntity<TarefaDTO> updateTarefa(@Valid @RequestBody TarefaDTO dto,@PathVariable Long id){
         return ResponseEntity.ok().body(iTarefa.updateTarefa(id, dto));
     }
 }

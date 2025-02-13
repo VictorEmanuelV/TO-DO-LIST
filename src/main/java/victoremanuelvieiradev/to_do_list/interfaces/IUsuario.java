@@ -10,7 +10,7 @@ public interface IUsuario {
     public UsuarioDTO save(UsuarioDTO dto);
     public void delete(Long id);
     public UsuarioDTO findUser(Long id);
-    public UsuarioDTO updateUser(UsuarioDTO dto, String email);
+    public UsuarioDTO updateUser(UsuarioDTO dto, Long id);
     public List<UsuarioDTO> findAll();
     public Usuario findByEmail(String email);
 }   

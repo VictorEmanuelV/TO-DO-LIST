@@ -1,5 +1,6 @@
 package victoremanuelvieiradev.to_do_list.web.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,10 +19,10 @@ public class AuthenticationController {
     private final AuthenticationManager manager;
     
     @PostMapping
-    public String auth(@RequestBody AuthDTO dto){
+    public ResponseEntity<String> auth(@RequestBody AuthDTO dto){
        authenticationService.authenticate(dto,manager);
        String token = authenticationService.generateToken(dto);
-       return token;
+       return ResponseEntity.ok().body(token);
 
     }
 }
