@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import victoremanuelvieiradev.to_do_list.interfaces.IAuthenticationService;
 import victoremanuelvieiradev.to_do_list.web.dto.AuthDTO;
@@ -18,6 +21,11 @@ public class AuthenticationController {
     private final IAuthenticationService authenticationService;
     private final AuthenticationManager manager;
     
+    @Operation(summary = "Autenticar um usuario")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "OK"),
+        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
+    })
     @PostMapping
     public ResponseEntity<String> auth(@RequestBody AuthDTO dto){
        authenticationService.authenticate(dto,manager);

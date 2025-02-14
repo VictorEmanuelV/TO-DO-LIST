@@ -40,7 +40,13 @@ public class SpringConfiguration {
                         .requestMatchers(HttpMethod.PUT,"tarefas/{id}").hasRole("COMUM")
                         .requestMatchers(HttpMethod.DELETE,"tarefas/{id}").hasRole("COMUM")
                         .requestMatchers(HttpMethod.GET,"tarefas").hasRole("COMUM")
-                        .anyRequest().authenticated())
+                        .requestMatchers(
+                            "/swagger-ui/**", 
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs.yaml"
+                                        ).permitAll()
+                  .anyRequest().authenticated())
                   .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                   .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                   .build();
